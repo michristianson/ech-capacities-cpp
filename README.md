@@ -5,7 +5,7 @@ This is a C++ library for computing obstructions to symplectic embeddings using 
 I wrote this code in 2016 as part of a Research Experience for Undergraduates (REU) program at Columbia University. This research ultimately resulted in a [paper](https://arxiv.org/abs/1610.00566) (co-authored with Jo Nelson, and published under my former legal name) that extends some of Hutchings' results in "Beyond ECH Capacities."
 [Note: this research was partially supported by NSF grants DMS-1206667, DMS-0970108, and a Graduate Research Fellowship.]
 
-This version of the library is written in C++. The original version was written in Haskell; however, some of the combinatorics involved are very computationally intensive, so I rewrote it in C++, which resulted in a huge performance improvement. If you're interested in doing computations for research with this library, I recommend this version. However, if just want to play around with some of these combinatorial computations and see how they work, the Haskell version should work just fine. If you're interested, you can found the Haskell version [here](https://github.com/michristianson/ech-capacities-haskell).
+This version of the library is written in C++. The original version was written in Haskell; however, some of the combinatorics involved are very computationally intensive, so I rewrote it in C++, which resulted in a huge performance improvement. If you're interested in doing computations for research with this library, I recommend this version. However, if you just want to test out some of these combinatorial computations and see how they work, the Haskell version should work just fine. If you're interested, you can found the Haskell version [here](https://github.com/michristianson/ech-capacities-haskell).
 
 
 
