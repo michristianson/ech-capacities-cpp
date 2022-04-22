@@ -1,5 +1,3 @@
-CTD Readme
-
 # Overview
 
 This is a C++ library for computing obstructions to symplectic embeddings using a certain combinatorial criterion developed by Michael Hutchings in his paper ["Beyond ECH Capacities"](https://arxiv.org/abs/1409.1352). These obstructions are derived from embedded contact homology (ECH) and are stronger than the obstructions obtained from ECH capacities. There are several known cases where symplectic folding can be used to show that the obstructions produced by Hutchings' criterion are optimal.
@@ -7,9 +5,7 @@ This is a C++ library for computing obstructions to symplectic embeddings using 
 I wrote this code in 2016 as part of a Research Experience for Undergraduates (REU) program at Columbia University. This research ultimately resulted in a [paper](https://arxiv.org/abs/1610.00566) (co-authored with Jo Nelson, and published under my former legal name) that extends some of Hutchings' results in "Beyond ECH Capacities."
 Note: this research was partially supported by NSF grants DMS-1206667, DMS-0970108, and a Graduate Research Fellowship.
 
-This version of the library is written in C++. The original version was written in Haskell; however, some of the combinatorics involved are very computationally intensive, so I rewrote it in C++, which resulted in a huge performance improvement. If you're interested in doing computations for research with this library, I recommend this version. However, if just want to play around with some of these combinatorial computations and see how they work, the Haskell version should work just fine. If you're interested, you can found the Haskell version [here](LINK).
-
-The name of the library, "CTD," is short for "convex toric domains." These are the specific types of symplectic manifolds that Hutchings' criterion applies to. They also correspond to certain combinatorial objects, which play a large role in Hutchings' criterion.
+This version of the library is written in C++. The original version was written in Haskell; however, some of the combinatorics involved are very computationally intensive, so I rewrote it in C++, which resulted in a huge performance improvement. If you're interested in doing computations for research with this library, I recommend this version. However, if just want to play around with some of these combinatorial computations and see how they work, the Haskell version should work just fine. If you're interested, you can found the Haskell version [here](https://github.com/michristianson/ech-capacities-haskell).
 
 
 
@@ -57,7 +53,7 @@ On Linux, boost will most likely work out-of-the-box if you just install the rig
 Once boost is installed, you just need to compile the code in this repository using the compiler of your choice. A makefile is provided in this repository, so if you have gcc (as many Linux systems do by default), you can just use the following commands on the command line:
 
 1. cd local/directory/for/this/library
-2. git clone (LINK)
+2. git clone https://github.com/michristianson/ech-capacities-cpp
 3. make
 
 On Windows, the easiest solution may be to download (or git clone) this repository,
