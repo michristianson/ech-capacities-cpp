@@ -16,6 +16,20 @@ using namespace std; // For cout (for debug print statements)
 template class LTGen<NoMemoizer>;
 template class LTGen<FSMemoizer>;
 
+/*A helper function to compute the ceiling of integer division. There
+ * are several ways to do this; the version used here should be quite fast,
+ * since both x / y and x % y can usually computed from one integer division.
+ * Note that, despite accepting signed types, the function will only work
+ * correctly for nonnegative integers (which is all we want to call it on,
+ * anyway).
+*/
+inline int_fast16_t pos_int_div_ceil(int_fast16_t x, int_fast16_t y)
+{
+    //One alternative way to do this (only works if x > 0).
+    //return 1 + (x-1) / y;
+    return x / y + (x % y != 0);
+}
+
 void FSMemoizer::start(const CTD* ctd1, const CTD* ctd2, const CGen& cg)
 {
     string name = FSMEM_BASE_DIR + "/" + ctd1->toString()
@@ -801,16 +815,18 @@ inline int_fast16_t LTGen<Memoizer>::getDiagonalEdgeMinimumX(int_fast16_t nexty)
     cout << "Computing lower bound on x for diagonal edge." << endl;
 #endif
 
-    /*Note: Here (and on hbound below), we use round() when it would
-      mathematically make sense to use ceil() (since we are getting a lower
-      bound on an integer). I'm not sure if this is necessary, but I think that
-      round() will be more robust to floating-point error, and it is better to
-      return a slightly weaker bound than to return an incorrect bound and fail
-      to try some edges that we should try. (I did the same thing in
-      LT_boundXUsingAction() and LT_boundYUsingAction() for Polydisk and
-      Ellipsoid in data.cpp, because I actually found a situation where using
-      floor() instead of round() gives the wrong answer there.) */
-    int_fast16_t indexbound = round( index * (-nexty) / (remainingy * (remainingy + 1)) );
+    /*Note: Here (and on hbound below), we are doing a division to get a
+     * lower bound on an integer. With floating-point division, this would
+     * mean applying ceil() to the division result. In this case, we are
+     * dividing two integers, so we can use integer division (which is the
+     * default behavior of int / int in C++) to compute the bound more
+     * efficiently and avoid any chances of rounding error.
+     * (Compare this with LT_boundXUsingAction() and LT_boundYUsingAction() for
+     * Polydisk and Ellipsoid in data.cpp, where we are computing a bound
+     * on an integer using a float division, and floating-point error can
+     * actually cause problems.)
+     */
+    int_fast16_t indexbound = pos_int_div_ceil(index * (-nexty), (remainingy * (remainingy + 1)));
     /* We can also get a bound on x from the "h condition" of a less than. We
      * need the final x-value x of the path to satisfy hcond - x <= 0. As above,
      * if we plan to add edge (nextx, nexty), then because later edges have
@@ -824,7 +840,7 @@ inline int_fast16_t LTGen<Memoizer>::getDiagonalEdgeMinimumX(int_fast16_t nexty)
      *
      * nextx >= hcond / c = hcond * (-nexty) / remainingy.
      */
-    int_fast16_t hbound = round( hcond * (-nexty) / remainingy );
+    int_fast16_t hbound = pos_int_div_ceil(hcond * (-nexty), remainingy);
     // In case the above bounds are not helpful, we make sure that the smallest
     // x-value we consider is 1 (vertical edges, i.e. those with x-value 0, are
     // only added at the end of the path if we've found a valid path).
@@ -872,12 +888,13 @@ inline int_fast16_t LTGen<Memoizer>::getDiagonalEdgeMaximumX(int_fast16_t nexty)
           in the equation below? Thanks to ceil(), we could end up getting the bound 
           to be 1 less than it should be, which could mean we fail to try 1 value of
           x that we should have tried. We switched to using round() in
-          getDiagonalEdgeMinimumX() just in case, but I don't think that would
-          work here: the slope bound has no margin for error on either side, or
-          else we risk missing an edge we should try or trying an edge with the
-          same slope as the previous one. (By contrast, our lower bounds on x
-          are still okay if they're a little too low -- we'll just try some
-          extra x-values that won't work.)
+          LT_boundXUsingAction() and LT_boundYUsingAction() (see data.cpp),
+          but I don't think that would work here: the slope bound has no
+          margin for error on either side, or else we risk missing an edge we
+          should try or trying an edge with the same slope as the previous
+          one. (By contrast, our upper bounds on x and y are still okay if
+          they're a little too loose -- we'll just try extra things that won't
+          work.)
 
           If this is a problem, I'm not quite sure what we could do to fix it.
           One failsafe would be to explicitly check if (upper bound on x)+1 is
